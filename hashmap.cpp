@@ -2,6 +2,7 @@
 
 using std::cout;
 using std::endl;
+using std::cin;
 
 const int SIZE = 10;
 
@@ -14,7 +15,7 @@ int hash(int key)
 int probe(int (&H)[SIZE], int key)
 {
     int index = hash(key);
-    int i = 1;
+    int i = 0;
 
     while (H[(index + i) % SIZE] != 0)
     {
@@ -31,7 +32,36 @@ void insert(int (&H)[SIZE], int key)
     {
         index = probe(H,key);
     }
-    H[index] = key;
+    H[index] = key;           
+}
+
+bool hash_contains(int (&H)[SIZE], int key)
+{
+    bool found = false;
+    int index = hash(key);
+    int i = 0;
+
+    if (key == H[index])
+    {
+        found = true;
+    }
+    else 
+    {
+        i = (index + 1) % SIZE;
+
+        while ((i != index) && (found == false))
+        {
+            if (key == H[i])
+            {
+                found = true;
+            }
+            else 
+            {
+                i = (++i) % SIZE;
+            }
+        }
+    }
+    return found;
 }
 
 void display(int (&H)[SIZE])
@@ -56,6 +86,7 @@ void display(int (&H)[SIZE])
 
 int main()
 {
+    int key = 0;
     int HT[SIZE] = {0};         // init hash-table with 0s
 
     insert(HT,22);
@@ -64,4 +95,16 @@ int main()
     insert(HT,26); 
 
     display(HT);
+
+    cout << "enter key you want to search: ";
+    cin >> key; 
+
+    if (key > 0 && hash_contains(HT,key))
+    {
+        cout << "key present" << endl;
+    }
+    else 
+    {
+        cout << "key is not present" << endl;
+    }
 }
